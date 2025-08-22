@@ -1,20 +1,22 @@
+// src/pages/Dashboard.js
+
 import React, { useContext, useState, useEffect } from 'react';
-import { 
-  Container, 
-  Grid, 
-  Card, 
-  CardContent, 
-  Typography, 
+import {
+  Container,
+  Grid,
+  Card,
+  CardContent,
+  Typography,
   Button,
   Box,
   IconButton,
-  Fab
+  Fab,
 } from '@mui/material';
-import { 
+import {
   Logout as LogoutIcon,
   Brightness4 as DarkModeIcon,
   Brightness7 as LightModeIcon,
-  Settings as SettingsIcon
+  Settings as SettingsIcon,
 } from '@mui/icons-material';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
@@ -27,7 +29,12 @@ import DraggableList from '../components/ui/DraggableList';
 import ThreeDBox from '../components/ui/ThreeDBox';
 import VoiceCommand from '../components/ui/VoiceCommand';
 
-const Dashboard = ({ toggleMode, mode }) => {
+// New 4D interactive components
+import IntroScene from '../components/IntroScene';
+import FeatureCarousel from '../components/FeatureCarousel';
+import VoiceWidget from '../components/VoiceWidget';
+
+export default function Dashboard({ toggleMode, mode }) {
   const { user, logout } = useContext(AuthContext);
   const [greeting, setGreeting] = useState('');
 
@@ -60,20 +67,27 @@ const Dashboard = ({ toggleMode, mode }) => {
   const username = profileData?.username || user?.user?.username || 'User';
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-      {/* Header */}
+    <div className="dashboard-container">
+
+      {/* 1. 3D Intro Scene */}
+      <IntroScene />
+
+      {/* 2. Header */}
       <Box className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <Container maxWidth="lg" className="py-4">
           <div className="flex items-center justify-between">
             <div>
-              <Typography variant="h4" component="h1" className="font-bold text-gray-900 dark:text-white">
+              <Typography
+                variant="h4"
+                component="h1"
+                className="font-bold text-gray-900 dark:text-white"
+              >
                 {greeting}, {username}! 👋
               </Typography>
               <Typography variant="body1" color="text.secondary">
                 Welcome to your AI-powered dashboard
               </Typography>
             </div>
-
             <div className="flex items-center space-x-2">
               <IconButton
                 onClick={toggleMode}
@@ -81,7 +95,6 @@ const Dashboard = ({ toggleMode, mode }) => {
               >
                 {mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
               </IconButton>
-
               <Button
                 component={Link}
                 to="/profile"
@@ -91,7 +104,6 @@ const Dashboard = ({ toggleMode, mode }) => {
               >
                 Profile
               </Button>
-
               <Button
                 onClick={logout}
                 variant="contained"
@@ -106,44 +118,38 @@ const Dashboard = ({ toggleMode, mode }) => {
         </Container>
       </Box>
 
-      {/* Main Content */}
+      {/* 3. Welcome Panel */}
+      <Box className="welcome-panel">
+        <Typography variant="h5" component="h2" className="font-medium mb-2">
+          Explore Features
+        </Typography>
+        <Typography variant="body2">
+          Chat with AI, use voice commands, interact with 3D graphics, and more.
+        </Typography>
+      </Box>
+
+      {/* 4. Feature Carousel */}
+      <Container maxWidth="lg" className="mt-4">
+        <FeatureCarousel />
+      </Container>
+
+      {/* 5. Main Content Grid */}
       <Container maxWidth="lg" className="py-8">
         <Grid container spacing={4}>
-          {/* Welcome Card */}
-          <Grid item xs={12}>
-            <Card className="animate-fade-in">
-              <CardContent>
-                <Typography variant="h6" className="mb-2">
-                  🚀 Welcome to the Future of Web Apps
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  This dashboard showcases cutting-edge features including AI chatbot, 
-                  voice commands, 3D graphics, drag & drop, and more. All optimized 
-                  for performance and accessibility.
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
 
           {/* AI Chatbot */}
           <Grid item xs={12} md={6} lg={4}>
-            <div className="h-full">
-              <AiChatbot />
-            </div>
+            <AiChatbot />
           </Grid>
 
           {/* Voice Commands */}
           <Grid item xs={12} md={6} lg={4}>
-            <div className="h-full">
-              <VoiceCommand />
-            </div>
+            <VoiceCommand />
           </Grid>
 
           {/* 3D Interactive Box */}
           <Grid item xs={12} md={6} lg={4}>
-            <div className="h-full">
-              <ThreeDBox />
-            </div>
+            <ThreeDBox />
           </Grid>
 
           {/* Draggable Task List */}
@@ -155,7 +161,7 @@ const Dashboard = ({ toggleMode, mode }) => {
           <Grid item xs={12} md={6}>
             <Grid container spacing={2}>
               <Grid item xs={6}>
-                <Card className="text-center animate-slide-in">
+                <Card className="text-center animate-fade-in">
                   <CardContent>
                     <Typography variant="h4" className="font-bold text-blue-600">
                       {new Date().getMonth() + 1}
@@ -166,7 +172,6 @@ const Dashboard = ({ toggleMode, mode }) => {
                   </CardContent>
                 </Card>
               </Grid>
-
               <Grid item xs={6}>
                 <Card className="text-center animate-slide-in">
                   <CardContent>
@@ -179,7 +184,6 @@ const Dashboard = ({ toggleMode, mode }) => {
                   </CardContent>
                 </Card>
               </Grid>
-
               <Grid item xs={12}>
                 <Card className="animate-slide-in">
                   <CardContent>
@@ -187,18 +191,18 @@ const Dashboard = ({ toggleMode, mode }) => {
                       🎯 Quick Actions
                     </Typography>
                     <div className="space-y-2">
-                      <Button 
-                        fullWidth 
-                        variant="outlined" 
+                      <Button
+                        fullWidth
+                        variant="outlined"
                         size="small"
                         component={Link}
                         to="/profile"
                       >
                         Update Profile
                       </Button>
-                      <Button 
-                        fullWidth 
-                        variant="outlined" 
+                      <Button
+                        fullWidth
+                        variant="outlined"
                         size="small"
                         onClick={() => window.location.reload()}
                       >
@@ -210,10 +214,14 @@ const Dashboard = ({ toggleMode, mode }) => {
               </Grid>
             </Grid>
           </Grid>
+
         </Grid>
       </Container>
 
-      {/* Floating Action Button for Quick Access */}
+      {/* 6. Floating Voice Widget */}
+      <VoiceWidget onCommand={(cmd) => console.log('Voice Command:', cmd)} />
+
+      {/* 7. Toggle Theme FAB */}
       <Fab
         color="primary"
         className="fixed bottom-6 right-6"
@@ -223,6 +231,4 @@ const Dashboard = ({ toggleMode, mode }) => {
       </Fab>
     </div>
   );
-};
-
-export default Dashboard;
+}
